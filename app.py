@@ -7,6 +7,7 @@ from setup_db import db
 from views.movie import movie_ns
 from views.genre import genre_ns
 from views.director import director_ns
+from views.auth import auth_ns
 
 
 def create_app(config_object):
@@ -22,6 +23,7 @@ def register_extensions(app):
     api.add_namespace(movie_ns)
     api.add_namespace(genre_ns)
     api.add_namespace(director_ns)
+    api.add_namespace(auth_ns)
 
     with app.app_context():
         db.create_all()

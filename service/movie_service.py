@@ -9,8 +9,8 @@ class MovieService:
     def get_one(self, mid):
         return self.dao.get_one(mid)
 
-    def get_all(self):
-        return self.dao.get_all()
+    def get_all(self, filters):
+        return self.dao.get_all(filters)
 
     def update(self, data):
         mid = data.get('id')

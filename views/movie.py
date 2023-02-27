@@ -2,6 +2,7 @@ from flask import request
 from flask_restx import Resource, Namespace
 
 from implemented import movie_service, movie_schema, movies_schema
+from parsers import page_parser
 
 movie_ns = Namespace('movies')
 
@@ -10,13 +11,8 @@ movie_ns = Namespace('movies')
 class MoviesView(Resource):
 
     def get(self):
-        data = {
-            'director_id': request.args.get('director_id'),
-            'genre_id': request.args.get('genre_id'),
-            'year': request.args.get('year')
-        }
-
-        all_movies = movie_service.filters(data)
+        filters = page_parser.parse_args()
+        all_movies = movie_service.get_all(filters)
 
         return movies_schema.dump(all_movies), 200
 

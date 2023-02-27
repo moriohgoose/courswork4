@@ -2,6 +2,7 @@ from flask import request
 from flask_restx import Resource, Namespace
 
 from implemented import genre_service, genre_schema, genres_schema
+from parsers import page_parser
 
 genre_ns = Namespace('genres')
 
@@ -10,7 +11,9 @@ genre_ns = Namespace('genres')
 class GenresView(Resource):
 
     def get(self):
-        genres = genre_service.get_all()
+        filters = page_parser.parse_args()
+        genres = genre_service.get_all(filters)
+
         return genres_schema.dump(genres), 200
 
 
