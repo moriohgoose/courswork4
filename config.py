@@ -7,5 +7,8 @@ class Config(object):
      PWD_ITERATIONS = 100_000
      JWT_ALGO = 'HS256'
      ENSURE_ASCII = True
+     ITEMS_PER_PAGE = 12
+     MAX_PAGE = 100
+     JSON_AS_ASCII = False
 
 

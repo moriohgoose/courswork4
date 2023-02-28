@@ -12,6 +12,7 @@ from service.auth import AuthService
 from dao.model.movie import MovieSchema
 from dao.model.director import DirectorSchema
 from dao.model.genre import GenreSchema
+from dao.model.user import UserSchema
 
 from setup_db import  db
 
@@ -32,5 +33,7 @@ movies_schema = MovieSchema(many=True)
 
 user_dao = UserDao(session=db.session)
 user_service = UserService(user_dao)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 auth_service = AuthService(user_service=user_service)

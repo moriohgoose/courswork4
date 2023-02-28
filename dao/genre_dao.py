@@ -1,4 +1,5 @@
 from .model.genre import Genre
+from config import Config
 
 
 class GenreDao:
@@ -7,8 +8,13 @@ class GenreDao:
 
     def get_all(self, filters):
         page = filters.get('page')
-        stmt = self.session.query(Genre)
-        return stmt.paginate(page=page, per_page=12).items
+
+        if page is not None:
+            result = self.session.query(Genre).paginate(page=int(page), per_page=Config.ITEMS_PER_PAGE,
+                                                        max_per_page=Config.MAX_PAGE, error_out=False).items
+            return result
+
+        return self.session.query(Genre).all()
 
     def get_one(self, gid):
         return self.session.query(Genre).get(gid)

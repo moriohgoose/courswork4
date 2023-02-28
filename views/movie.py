@@ -11,7 +11,13 @@ movie_ns = Namespace('movies')
 class MoviesView(Resource):
 
     def get(self):
-        filters = page_parser.parse_args()
+        status = request.args.get("director_id")
+        page = request.args.get("genre_id")
+        filters = {
+            "status": status,
+            "page": page,
+        }
+        # filters = page_parser.parse_args()
         all_movies = movie_service.get_all(filters)
 
         return movies_schema.dump(all_movies), 200

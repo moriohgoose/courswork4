@@ -9,33 +9,32 @@ class UserDao:
     def __init__(self, session):
         self.session = session
 
+    def get_one(self, uid):
+        return self.session.query(User).get(uid)
+
+    def get_all(self):
+        return self.session.query(User).all
+
     def create(self, user_data):
         usr = User(**user_data)
         self.session.add(usr)
         self.session.commit()
         return usr
 
+    def delete(self, uid):
+        usr = self.get_one(uid)
+        self.session.add(usr)
+        self.session.commit()
+
+    def update(self, user_data):
+        usr = self.get_one(user_data.get("id"))
+
+        for k, v in user_data.items():
+            setattr(usr, k, v)
+
+        self.session.add(usr)
+        self.session.commit()
+
     def get_by_email(self, email):
         return self.session.query(User).filter(User.email == email).one_or_none()
 
-    def generate_password_digest(self, password):
-        return hashlib.pbkdf2_hmac(
-            hash_name='sha256',
-            password=password.encode('utf-8'),
-            salt=Config.PWD_SALT,
-            iterations=Config.PWD_ITERATIONS
-        )
-
-    def get_hash(self, password):
-        return base64.b64encode(self.generate_password_digest(password)).decode('utf-8')
-
-    def compare_passwords(self, password_hash, other_password):
-        return hmac.compare_digest(
-            base64.b64decode(password_hash),
-            hashlib.pbkdf2_hmac(
-                'sha256',
-                other_password.encode(),
-                Config.PWD_SALT,
-                Config.PWD_ITERATIONS
-            )
-        )

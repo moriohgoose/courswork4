@@ -1,4 +1,5 @@
 from .model.movie import Movie
+from config import Config
 
 
 class MovieDao:
@@ -6,13 +7,25 @@ class MovieDao:
         self.session = session
 
     def get_all(self, filters):
+
         page = filters.get('page')
         status = filters.get('status')
-        stmt = self.session.query(Movie)
-        if status == 'new':
-            stmt.order_by(Movie.year.desc())
 
-        return stmt.paginate(page=page, per_page=12).items
+        if status == 'new' and page is not None:
+            result = self.session.query(Movie).order_by(Movie.year.desc()). \
+                paginate(page=int(page), per_page=Config.ITEMS_PER_PAGE, max_per_page=Config.MAX_PAGE, error_out=False).items
+            return result
+
+        elif status == 'new':
+            result = self.session.query(Movie).order_by(Movie.year.desc()).all()
+            return result
+
+        elif page is not None:
+            result = self.session.query(Movie).\
+                paginate(page=int(page), per_page=Config.ITEMS_PER_PAGE, max_per_page=Config.MAX_PAGE, error_out=False).items
+            return result
+
+        return self.session.query(Movie).all()
 
     def get_one(self, mid):
         return self.session.query(Movie).get(mid)
